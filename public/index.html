@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>WebSocket Lobby System</title>
+    <script type="module" src="main.js"></script>
+    <style>
+        body { font-family: Arial, sans-serif; }
+        #container { margin: 50px; }
+        iframe {
+            width: 100%;
+            height: 500px;
+            outline: none;
+            border: none;
+        }
+    </style>
+</head>
+<body>
+    <div id="container">
+        <div>Your ID: <span id="userIdDisplay"></span></div>
+        <!-- Join a lobby -->
+        <p id="lobbyStatus"></p>
+        <h3>Join a Lobby</h3>
+        <input type="text" id="joinLobbyInput" placeholder="Enter lobby name" />
+        <button id="joinLobbyBtn">Request to Join</button>
+        <div id="joinStatus"></div>
+    </div>
+    <iframe id="game" src="/game.html"></iframe>
+    <script>
+        document.getElementById('game').onload = () => {
+            const cw = document.getElementById('game').contentWindow;
+            cw.console.log = new Proxy(cw.console.log, {
+                apply: function(target, thisArg, argumentsList) {
+                    if (argumentsList[0] === 'start game called') {
+                        setTimeout(() => start(), 500);
+                    }
+
+                    return Reflect.apply(target, thisArg, argumentsList);
+                }
+            });
+        }
+
+        function start() {
+            const cw = document.getElementById('game').contentWindow;
+
+
+            Object.defineProperties(cw, {
+                "ball": {
+                    get: () => cw.c3_runtimeInterface._localRuntime._iRuntime.objects.balls.getAllInstances()[0],
+                },
+                "players": {
+                    get: () => [
+                        cw.c3_runtimeInterface._localRuntime._iRuntime.objects.body.getAllInstances()[0],
+                        cw.c3_runtimeInterface._localRuntime._iRuntime.objects.body2.getAllInstances()[0],
+                        cw.c3_runtimeInterface._localRuntime._iRuntime.objects.body3.getAllInstances()[0],
+                        cw.c3_runtimeInterface._localRuntime._iRuntime.objects.body4.getAllInstances()[0],
+                    ],
+                },
+                "heads": {
+                    get: () => [
+                        cw.c3_runtimeInterface._localRuntime._iRuntime.objects.head.getAllInstances()[0],
+                        cw.c3_runtimeInterface._localRuntime._iRuntime.objects.head2.getAllInstances()[0],
+                        cw.c3_runtimeInterface._localRuntime._iRuntime.objects.head3.getAllInstances()[0],
+                        cw.c3_runtimeInterface._localRuntime._iRuntime.objects.head4.getAllInstances()[0],
+                    ],
+                },
+                "arms": {
+                    get: () => [
+                        cw.c3_runtimeInterface._localRuntime._iRuntime.objects.arm.getAllInstances()[0],
+                        cw.c3_runtimeInterface._localRuntime._iRuntime.objects.arm2.getAllInstances()[0],
+                        cw.c3_runtimeInterface._localRuntime._iRuntime.objects.arm3.getAllInstances()[0],
+                        cw.c3_runtimeInterface._localRuntime._iRuntime.objects.arm4.getAllInstances()[0],
+                    ],
+                },
+                "globalVars": {
+                    get: () => cw.c3_runtimeInterface._localRuntime._iRuntime.globalVars,
+                }
+            });
+
+            ['keydown', 'keyup'].forEach(name => {
+                cw.document.addEventListener(name, (event) => {
+                    cw.console.log(`Event: ${name}, Key: ${event.key}`);
+                    event.preventDefault();
+                    event.stopPropagation();
+                    event.stopImmediatePropagation();
+
+                    window.dispatchEvent(new CustomEvent('basket-key', { detail: {type: name, key: event.key} }));
+                });
+            });
+
+            cw.AudioDOMHandler.prototype._Play = new Proxy(cw.AudioDOMHandler.prototype._Play, {
+            apply: (target, thisArg, argumentsList) => {
+                console.log(argumentsList[0].originalUrl)
+
+                if (argumentsList[0].originalUrl === "file") {
+                    cw.globalVars.p1Score = 0;
+                    cw.globalVars.p2Score = 0;
+                }
+
+                return target.apply(thisArg, argumentsList);
+            }});
+        }
+    </script>
+</body>
+</html>
