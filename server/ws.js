@@ -85,8 +85,6 @@ export function createWebSocketServer(server) {
 }
 
 async function createLobby(lobbyId) {
-    const browser = await run();
-
     const twoPlayers = new Promise((resolve) => {
         const interval = setInterval(() => {
             const clients = [...wss.clients].filter(client => client.lobbyId === lobbyId);
@@ -98,6 +96,8 @@ async function createLobby(lobbyId) {
     });
 
     await twoPlayers;
+
+    const browser = await run();
 
     console.log(`Starting game in lobby: ${lobbyId}`);
 
