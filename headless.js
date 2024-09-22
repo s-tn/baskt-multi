@@ -12,7 +12,7 @@ const run = async () => {
 
     const browser = await puppeteer.launch({
         headless: true,
-        args: ['--no-sandbox', '--disable-setuid-sandbox'],
+        args: ['--no-sandbox', '--disable-setuid-sandbox', '--no-zygote', '--disable-gpu'],
         executablePath: chromiumExec,
     });
     const page = await browser.newPage({
