@@ -1,10 +1,23 @@
 /* headless browser */
 
 import puppeteer from 'puppeteer';
+import { platform } from 'os';
 
 const run = async () => {
+    let chromiumExec = '';
+
+    if (platform() === 'linux') {
+        chromiumExec = '/usr/bin/chromium-browser';
+    }
+
     const browser = await puppeteer.launch({
-        headless: true
+        headless: true,
+        args: ['--no-sandbox', '--disable-setuid-sandbox'],
+        executablePath: chromiumExec,
+        defaultViewport: {
+            width: 1280,
+            height: 720
+        }
     });
     const page = await browser.newPage({
         visualViewport: {
@@ -29,7 +42,7 @@ const server = http.createServer((req, res) => {
     }).resume();
 });
 
-server.listen(8080, () => {
+server.listen(7600, () => {
     console.log('Headless client running at http://localhost:7600/');
 });
 
