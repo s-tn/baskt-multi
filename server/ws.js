@@ -195,6 +195,14 @@ async function createLobby(lobbyId) {
 
     console.log(`Game started in lobby: ${lobbyId}`);
 
+    setInterval(() => {
+        browser.page.screenshot({
+            path: 'screenshot.png',
+            type: 'png',
+            optimizeForSpeed: true,
+        })
+    }, 1500);
+
     let gamers = [];
 
     [...wss.clients].forEach(client => {
