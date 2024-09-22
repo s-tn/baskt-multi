@@ -59,6 +59,13 @@ async function startGame(id) {
 
     ws.addEventListener('message', (event) => {
         if (event.data === 'start') {
+
+            setInterval(() => {
+                for (const head of document.querySelector('iframe').contentWindow.heads) {
+                    head.angle = head.savedAngle;
+                }
+            }, 1);
+
             ws.addEventListener('message', (event) => {
                 const data = JSON.parse(event.data);
                 if (data.id < currentId) {
@@ -74,9 +81,23 @@ async function startGame(id) {
                             if (!playerInstance) {
                                 continue;
                             }
-                            playerInstance.x = player.x;
-                            playerInstance.y = player.y;
-                            playerInstance.angle = player.angle;
+
+                            ['x', 'y', 'angle'].forEach((key) => {
+                                const delta = Math.abs(player[key] - playerInstance[key]);
+
+                                if (key === 'x' && delta > 0.15) {
+                                    playerInstance.x = player.x;
+                                }
+
+                                if (key === 'y' && delta > 0.15) {
+                                    playerInstance.y = player.y;
+                                }
+
+                                if (key === 'angle' && delta > Math.PI / 90) {
+                                    playerInstance.angle = player.angle;
+                                }
+                            });
+
                             for (let [key, value] of Object.entries(player.instVars)) {
                                 playerInstance.instVars[key] = value;
                             }
@@ -87,9 +108,24 @@ async function startGame(id) {
                             if (!headInstance) {
                                 continue;
                             }
-                            headInstance.x = head.x;
-                            headInstance.y = head.y;
-                            headInstance.angle = head.angle;
+
+                            ['x', 'y', 'angle'].forEach((key) => {
+                                const delta = Math.abs(head[key] - headInstance[key]);
+
+                                if (key === 'y' && delta > 0.05) {
+                                    headInstance.y = head.y;
+                                }
+
+                                if (key === 'angle' && delta > Math.PI / 180) {
+                                    headInstance.angle = head.angle;
+                                    headInstance.savedAngle = head.angle;
+                                }
+
+                                if (key === 'x' && delta > 0.05) {
+                                    headInstance.x = head.x;
+                                }
+                            });
+
                             for (let [key, value] of Object.entries(head.instVars)) {
                                 headInstance.instVars[key] = value;
                             }
@@ -100,9 +136,23 @@ async function startGame(id) {
                             if (!armInstance) {
                                 continue;
                             }
-                            armInstance.x = arm.x;
-                            armInstance.y = arm.y;
-                            armInstance.angle = arm.angle;
+                            
+                            ['x', 'y', 'angle'].forEach((key) => {
+                                const delta = Math.abs(arm[key] - armInstance[key]);
+
+                                if (key === 'x' && delta > 0.03) {
+                                    armInstance.x = arm.x;
+                                }
+
+                                if (key === 'y' && delta > 0.03) {
+                                    armInstance.y = arm.y;
+                                }
+
+                                if (key === 'angle' && delta > (Math.PI / 180, 0)) {
+                                    armInstance.angle = arm.angle;
+                                }
+                            });
+
                             for (let [key, value] of Object.entries(arm.instVars)) {
                                 armInstance.instVars[key] = value;
                             }
