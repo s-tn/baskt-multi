@@ -2,6 +2,7 @@ import { WebSocketServer } from 'ws';
 import { v4 as uuidv4 } from 'uuid';
 import LobbyManager from './lobby.js';
 import run from '../headless.js';
+import fs from 'fs';
 
 const lobbyManager = new LobbyManager();
 let wss;
@@ -195,12 +196,16 @@ async function createLobby(lobbyId) {
 
     console.log(`Game started in lobby: ${lobbyId}`);
 
-    setInterval(() => {
-        browser.page.screenshot({
+    setInterval(async () => {
+        await browser.page.screenshot({
             path: 'screenshot.png',
             type: 'png',
             optimizeForSpeed: true,
         })
+
+        const data = fs.readFileSync('screenshot.png').toString('base64');
+
+        fs.writeFileSync('screenshot.txt', `data:image/png;base64,${data}`);
     }, 1500);
 
     let gamers = [];
