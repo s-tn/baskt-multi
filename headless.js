@@ -14,10 +14,6 @@ const run = async () => {
         headless: true,
         args: ['--no-sandbox', '--disable-setuid-sandbox'],
         executablePath: chromiumExec,
-        defaultViewport: {
-            width: 1280,
-            height: 720
-        }
     });
     const page = await browser.newPage({
         visualViewport: {
