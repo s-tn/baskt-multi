@@ -196,7 +196,7 @@ async function createLobby(lobbyId) {
 
     console.log(`Game started in lobby: ${lobbyId}`);
 
-    setInterval(async () => {
+    /*setInterval(async () => {
         await browser.page.screenshot({
             path: 'screenshot.png',
             type: 'png',
@@ -206,7 +206,7 @@ async function createLobby(lobbyId) {
         const data = fs.readFileSync('screenshot.png').toString('base64');
 
         fs.writeFileSync('screenshot.txt', `data:image/png;base64,${data}`);
-    }, 1500);
+    }, 1500);*/
 
     let gamers = [];
 
