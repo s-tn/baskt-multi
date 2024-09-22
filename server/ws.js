@@ -188,7 +188,7 @@ async function createLobby(lobbyId) {
     await new Promise((resolve) => {
         setTimeout(() => {
             resolve();
-        }, 500);
+        }, 2000);
     });
 
     await browser.page.mouse.move((width / 2) + 100, height / 2);
