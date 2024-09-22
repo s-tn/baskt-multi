@@ -60,11 +60,11 @@ async function startGame(id) {
     ws.addEventListener('message', (event) => {
         if (event.data === 'start') {
 
-            setInterval(() => {
+            /*setInterval(() => {
                 for (const head of document.querySelector('iframe').contentWindow.heads) {
                     head.angle = head.savedAngle;
                 }
-            }, 1);
+            }, 1);*/
 
             ws.addEventListener('message', (event) => {
                 const data = JSON.parse(event.data);
