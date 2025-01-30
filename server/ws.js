@@ -267,7 +267,7 @@ async function createLobby(lobbyId) {
                 arms: window.arms.map((arm) => ({ x: arm.x, y: arm.y, angle: arm.angle, instVars: arm.instVars })),
                 ball: { x: window.ball.x, y: window.ball.y, instVars: {hold: window.ball.instVars.hold, who: window.ball.instVars.who} },
             })));
-        }, 1000 / 20);
+        }, 1000 / 96);
 
         return true;
     });

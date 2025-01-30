@@ -13,15 +13,15 @@ const run = async () => {
     const browser = await puppeteer.launch({
         headless: true,
         args: ['--no-sandbox', '--disable-setuid-sandbox'],
-        executablePath: chromiumExec,
+        executablePath: chromiumExec
     });
     const page = await browser.newPage({
         visualViewport: {
-            innerWidth: 1280,
-            innerHeight: 720
+            innerWidth: 640,
+            innerHeight: 360
         }
     });
-    page.setViewport({ width: 1280, height: 720 });
+    page.setViewport({ width: 640, height: 360 });
     await page.goto('http://localhost:7600/');
 
     return { browser, page };
